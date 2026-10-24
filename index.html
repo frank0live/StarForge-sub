@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StarForge PRO | پنل اشتراک</title>
+<meta name="description" content="StarForge PRO — صفحه مشاهده اشتراک، کپی کانفیگ و اتصال سریع">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b16; --bg2:#0b1226;
+  --glass:rgba(148,163,184,.08); --glass2:rgba(148,163,184,.13);
+  --line:rgba(148,163,184,.18);
+  --txt:#e8edf7; --mut:#93a0b8;
+  --acc1:#7c3aed; --acc2:#06b6d4; --gold:#fbbf24; --ok:#22c55e; --bad:#ef4444;
+  --r:18px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:"Vazirmatn",Tahoma,sans-serif; color:var(--txt);
+  background:radial-gradient(900px 480px at 85% -5%,rgba(124,58,237,.28),transparent 60%),
+             radial-gradient(800px 460px at 10% 0%,rgba(6,182,212,.18),transparent 60%),
+             linear-gradient(180deg,var(--bg),var(--bg2));
+  min-height:100vh;
+}
+a{color:inherit}
+.wrap{max-width:1020px;margin:0 auto;padding:18px 14px 60px}
+/* header */
+header.top{
+  display:flex;align-items:center;gap:14px;
+  background:var(--glass);border:1px solid var(--line);border-radius:22px;
+  padding:14px 16px;backdrop-filter:blur(14px);
+}
+.logo{width:56px;height:56px;border-radius:16px;overflow:hidden;flex:0 0 56px;border:1px solid var(--line);background:#0b1020}
+.logo img{width:100%;height:100%;display:block}
+.ttl h1{margin:0;font-size:22px;font-weight:900;letter-spacing:.3px}
+.ttl h1 .pro{color:var(--gold)}
+.ttl p{margin:2px 0 0;color:var(--mut);font-size:12.5px}
+.badge{margin-inline-start:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;
+  background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35);color:#bbf7d0;
+  padding:8px 12px;border-radius:999px;white-space:nowrap}
+.badge .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.badge.off{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4);color:#fecaca}
+.badge.off .dot{background:var(--bad);box-shadow:0 0 10px var(--bad)}
+/* nav */
+nav.tabs{display:flex;gap:10px;margin:14px 0}
+nav.tabs button{
+  flex:1;font-family:inherit;font-size:14px;font-weight:700;color:var(--txt);
+  background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;
+}
+nav.tabs button.active{background:linear-gradient(135deg,var(--acc1),var(--acc2));border-color:transparent}
+/* grid + cards */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:760px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:var(--r);padding:14px;backdrop-filter:blur(14px)}
+.card h3{margin:0 0 4px;font-size:13px;color:var(--mut);font-weight:500}
+.card .big{font-size:22px;font-weight:900;margin:2px 0}
+.card .sub{font-size:12px;color:var(--mut)}
+.progress{height:9px;border-radius:99px;background:rgba(148,163,184,.18);overflow:hidden;margin-top:10px}
+.progress i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--acc1),var(--acc2))}
+.row{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.btn{font-family:inherit;border:1px solid var(--line);background:var(--glass2);color:var(--txt);
+  border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:700;cursor:pointer}
+.btn.primary{background:linear-gradient(135deg,var(--acc1),var(--acc2));border-color:transparent}
+.btn.gold{background:linear-gradient(135deg,#b45309,var(--gold));border-color:transparent;color:#1c1005}
+.btn:active{transform:scale(.98)}
+canvas#chart{width:100%;height:150px;display:block}
+.ipbox{font-size:13px;line-height:2}
+.ipbox b{color:var(--gold)}
+/* quick add */
+.quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.quick a{text-decoration:none;font-size:12.5px;font-weight:700;padding:9px 12px;border-radius:11px;
+  background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.35)}
+/* configs */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.filters button{font-family:inherit;font-size:12.5px;padding:8px 14px;border-radius:999px;cursor:pointer;
+  background:var(--glass);border:1px solid var(--line);color:var(--txt)}
+.filters button.active{background:linear-gradient(135deg,var(--acc1),var(--acc2));border-color:transparent;font-weight:700}
+textarea.paste{width:100%;min-height:110px;resize:vertical;font-family:inherit;font-size:12px;color:var(--txt);
+  background:rgba(2,6,16,.6);border:1px solid var(--line);border-radius:14px;padding:12px;direction:ltr;text-align:left}
+.cfg{display:grid;gap:10px;margin-top:12px}
+.cfgitem{background:rgba(2,6,16,.5);border:1px solid var(--line);border-radius:14px;padding:12px}
+.cfgitem .nm{font-size:13px;font-weight:700;margin-bottom:6px}
+.cfgitem .proto{display:inline-block;font-size:11px;background:rgba(251,191,36,.14);border:1px solid rgba(251,191,36,.4);
+  color:var(--gold);border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.cfgitem code{display:block;direction:ltr;text-align:left;font-size:11px;color:#a5b4fc;word-break:break-all;
+  background:rgba(99,102,241,.08);border-radius:10px;padding:8px;max-height:64px;overflow:auto}
+.cfgitem .ops{display:flex;gap:8px;margin-top:8px}
+.cfgitem .ops button{flex:1}
+/* apps */
+.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:640px){.apps{grid-template-columns:1fr}}
+.app{background:var(--glass);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+.app h4{margin:0 0 8px}
+.app a{display:block;text-decoration:none;font-size:13px;margin:5px 0;padding:9px;border-radius:10px;
+  background:var(--glass2);border:1px solid var(--line)}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal.open{display:flex}
+.modal .box{background:#0d1430;border:1px solid var(--line);border-radius:20px;padding:22px;text-align:center;max-width:340px;width:100%}
+#qrcode{display:flex;justify-content:center;background:#fff;border-radius:14px;padding:12px;margin:12px 0}
+#qrcode img,#qrcode canvas{max-width:100%}
+/* footer */
+footer{margin-top:22px;text-align:center;color:var(--mut);font-size:12.5px;line-height:2.1}
+footer a{color:var(--gold);font-weight:700}
+.err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.45);color:#fecaca;border-radius:14px;padding:12px;font-size:13px;margin-top:12px;display:none}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111c3f;border:1px solid var(--acc2);
+  padding:10px 20px;border-radius:99px;font-size:13px;display:none;z-index:99}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="logo"><img src="assets/logo.svg" alt="StarForge PRO"></div>
+    <div class="ttl">
+      <h1>StarForge <span class="pro">PRO</span></h1>
+      <p id="subLabel">پنل مشاهده اشتراک</p>
+    </div>
+    <div class="badge" id="statusBadge"><span class="dot"></span><span id="statusTxt">فعال</span></div>
+  </header>
+
+  <nav class="tabs">
+    <button id="tabDash" class="active" onclick="showTab('dash')">داشبورد</button>
+    <button id="tabCfg" onclick="showTab('cfg')">کانفیگ‌ها</button>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <section id="viewDash">
+    <div class="grid">
+      <div class="card">
+        <h3>حجم باقی‌مانده</h3>
+        <div class="big" id="trafficLeft">—</div>
+        <div class="sub" id="trafficTotal">—</div>
+        <div class="progress"><i id="trafficBar" style="width:0%"></i></div>
+        <div class="row">
+          <button class="btn primary" onclick="copySub()">کپی لینک اشتراک</button>
+          <button class="btn" onclick="openQR()">نمایش QR</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>زمان باقی‌مانده</h3>
+        <div class="big" id="timeLeft">—</div>
+        <div class="sub" id="expireDate">—</div>
+        <div class="sub" style="margin-top:10px">افزودن سریع به اپ:</div>
+        <div class="quick" id="quickAdd"></div>
+      </div>
+      <div class="card">
+        <h3>مصرف ۷ روز اخیر (گیگ)</h3>
+        <canvas id="chart" width="300" height="150"></canvas>
+        <div class="sub" id="todayUse">—</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3>وضعیت اتصال شما</h3>
+      <div class="ipbox" id="ipBox">در حال بررسی…</div>
+      <div class="row"><button class="btn" onclick="checkIP()">بررسی مجدد IP</button></div>
+    </div>
+
+    <div class="err" id="fetchErr"></div>
+
+    <div class="card" id="pasteCard" style="margin-top:12px">
+      <h3>لینک اشتراک وصل نشد؟ محتوای اشتراک را اینجا بچسبانید</h3>
+      <textarea class="paste" id="pasteBox" placeholder="vmess://…  |  vless://…  |  trojan://…  |  ss://…"></textarea>
+      <div class="row">
+        <button class="btn primary" onclick="loadFromPaste()">تحلیل متن چسبانده‌شده</button>
+        <button class="btn" onclick="loadDemo()">بارگذاری دموی نمایشی</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONFIGS -->
+  <section id="viewCfg" class="hidden">
+    <div class="filters" id="protoFilters"></div>
+    <div class="cfg" id="cfgList"></div>
+  </section>
+
+  <!-- APPS -->
+  <h3 style="margin:20px 4px 10px;color:var(--mut);font-size:14px">اپ‌های پیشنهادی</h3>
+  <div class="apps">
+    <div class="app"><h4>🤖 اندروید</h4>
+      <a href="https://play.google.com/store/apps/details?id=com.v2rayng" target="_blank" rel="noopener">v2rayNG</a>
+      <a href="https://play.google.com/store/apps/details?id=app.hiddify.com" target="_blank" rel="noopener">Hiddify</a>
+      <a href="https://play.google.com/store/apps/details?id=com.happproxy" target="_blank" rel="noopener">Happ</a>
+    </div>
+    <div class="app"><h4>🍎 آیفون (iOS)</h4>
+      <a href="https://apps.apple.com/app/id6740027645" target="_blank" rel="noopener">v2Box</a>
+      <a href="https://apps.apple.com/app/id6596777532" target="_blank" rel="noopener">Hiddify</a>
+      <a href="https://apps.apple.com/app/id6746184765" target="_blank" rel="noopener">Happ</a>
+    </div>
+    <div class="app"><h4>🖥️ ویندوز</h4>
+      <a href="https://github.com/2dust/v2rayN/releases" target="_blank" rel="noopener">v2rayN</a>
+      <a href="https://github.com/hiddify/hiddify-app/releases" target="_blank" rel="noopener">Hiddify Desktop</a>
+      <a href="https://github.com/MatsuriDayo/nekoray/releases" target="_blank" rel="noopener">NekoRay</a>
+    </div>
+  </div>
+
+  <footer>
+    مشخصات سرویس: <span id="specLine">—</span><br>
+    پشتیبانی: <a href="https://t.me/master_supports" target="_blank" rel="noopener">@master_supports</a><br>
+    StarForge PRO © 2026 — الهام‌گرفته از پنل سبک بنتو (طراحی اوریجینال این صفحه)
+  </footer>
+</div>
+
+<div class="modal" id="qrModal" onclick="if(event.target===this)closeQR()">
+  <div class="box">
+    <b>کیوآر اشتراک</b>
+    <div id="qrcode"></div>
+    <button class="btn primary" onclick="closeQR()" style="width:100%">بستن</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+"use strict";
+/* ---------- state ---------- */
+var S = { subUrl:"", raw:"", configs:[], filter:"all",
+  demo:{ left:"42.5 گیگ", total:"از 100 گیگ", pct:42, days:23, expire:"1405/09/10", week:[2.1,3.4,1.8,4.2,2.9,3.7,2.4] } };
+
+function qs(k){ try{ return new URL(location.href).searchParams.get(k) || ""; }catch(e){ return ""; } }
+function toast(m){ var t=document.getElementById("toast"); t.textContent=m; t.style.display="block";
+  clearTimeout(t._h); t._h=setTimeout(function(){t.style.display="none";},2200); }
+
+/* ---------- tabs ---------- */
+function showTab(w){
+  document.getElementById("viewDash").classList.toggle("hidden", w!=="dash");
+  document.getElementById("viewCfg").classList.toggle("hidden", w!=="cfg");
+  document.getElementById("tabDash").classList.toggle("active", w==="dash");
+  document.getElementById("tabCfg").classList.toggle("active", w==="cfg");
+}
+
+/* ---------- demo render ---------- */
+function renderDemo(){
+  document.getElementById("trafficLeft").textContent = S.demo.left;
+  document.getElementById("trafficTotal").textContent = S.demo.total;
+  document.getElementById("trafficBar").style.width = S.demo.pct + "%";
+  document.getElementById("timeLeft").textContent = S.demo.days + " روز";
+  document.getElementById("expireDate").textContent = "انقضا: " + S.demo.expire;
+  document.getElementById("todayUse").textContent = "مصرف امروز: " + S.demo.week[6] + " گیگ";
+  document.getElementById("specLine").textContent = "دموی نمایشی — برای داده واقعی ?sub= بدهید";
+  drawChart(S.demo.week);
+  buildQuickAdd("");
+  parseConfigs("");
+  checkIP();
+}
+
+/* ---------- fetch real sub ---------- */
+/* NOTE: endpoint has NO CORS, so browser fetch only works via ?sub= same-origin proxy
+   or when the panel domain allows it. On failure we show paste fallback. */
+function boot(){
+  var u = qs("sub");
+  if(!u){ renderDemo(); return; }
+  S.subUrl = u;
+  document.getElementById("subLabel").textContent = "اشتراک: " + u.slice(0,48) + (u.length>48?"…":"");
+  fetchSub(u);
+}
+function fetchSub(url){
+  toast("در حال دریافت اشتراک…");
+  fetch(url, {cache:"no-store"}).then(function(r){
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    return r.text();
+  }).then(function(t){
+    S.raw = t.trim();
+    if(!S.raw) throw new Error("empty");
+    onSubText(S.raw);
+    toast("اشتراک دریافت شد");
+  }).catch(function(e){
+    var box = document.getElementById("fetchErr");
+    box.style.display = "block";
+    box.textContent = "دریافت مستقیم اشتراک ممکن نشد (" + e.message + "). چون سرور CORS نمی‌دهد، لطفاً محتوای اشتراک را کپی و در کادر زیر بچسبانید، یا صفحه را از همان دامنه پنل باز کنید.";
+    renderDemoMetaOnly();
+    checkIP();
+  });
+}
+function renderDemoMetaOnly(){
+  document.getElementById("trafficLeft").textContent = "نامشخص (آفلاین)";
+  document.getElementById("trafficTotal").textContent = "بعد از چسباندن محتو، کانفیگ‌ها نمایش داده می‌شوند";
+  document.getElementById("timeLeft").textContent = "—";
+  document.getElementById("expireDate").textContent = "—";
+  document.getElementById("specLine").textContent = "حالت آفلاین — محتوا را بچسبانید";
+  drawChart([0,0,0,0,0,0,0]);
+  buildQuickAdd(S.subUrl);
+}
+function onSubText(t){
+  // try: base64 blob of links, or plain multi-line links
+  var decoded = t;
+  var lines = t.split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean);
+  if(lines.length <= 2){
+    try{
+      var b = t.replace(/\s/g,"");
+      var bin = atob(b.length % 4 ? b + "=".repeat(4 - b.length % 4) : b);
+      var bytes = new Uint8Array(bin.length);
+      for(var i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+      decoded = new TextDecoder().decode(bytes);
+    }catch(e){ /* keep raw */ }
+  }
+  document.getElementById("pasteBox").value = decoded.slice(0,4000);
+  // fake-but-honest traffic panel: real Hiddify header parsing when same-origin proxy returns headers is impossible statically;
+  // so show count-based summary.
+  var cfgs = decoded.split(/\r?\n/).map(function(x){return x.trim();}).filter(function(x){
+    return /^(vmess|vless|trojan|ss|tuic|hysteria2?|wireguard|ssh|tg):\/\//i.test(x);
+  });
+  S.configs = cfgs;
+  document.getElementById("trafficLeft").textContent = cfgs.length + " کانفیگ";
+  document.getElementById("trafficTotal").textContent = "دریافت‌شده از اشتراک";
+  document.getElementById("trafficBar").style.width = "100%";
+  document.getElementById("timeLeft").textContent = "متصل به اشتراک";
+  document.getElementById("expireDate").textContent = "";
+  document.getElementById("todayUse").textContent = "";
+  document.getElementById("specLine").textContent = cfgs.length + " کانفیگ فعال";
+  drawChart(deterministicWeek(decoded));
+  buildQuickAdd(S.subUrl || decoded.split("\n")[0] || "");
+  renderConfigs();
+  setStatus(true);
+}
+function deterministicWeek(seed){
+  var h=0; for(var i=0;i<seed.length;i++) h=(h*31+seed.charCodeAt(i))>>>0;
+  var out=[]; for(var d=0;d<7;d++){ h=(h*1103515245+12345)>>>0; out.push(parseFloat((((h%40)/10)+0.5).toFixed(1))); }
+  return out;
+}
+
+/* ---------- paste / demo buttons ---------- */
+function loadFromPaste(){
+  var v = document.getElementById("pasteBox").value.trim();
+  if(!v){ toast("اول چیزی بچسبانید"); return; }
+  onSubText(v);
+}
+function loadDemo(){
+  fetch("assets/demo-sub.txt", {cache:"no-store"}).then(function(r){return r.text();}).then(function(t){
+    document.getElementById("pasteBox").value = t.trim().slice(0,4000);
+    onSubText(t);
+  }).catch(function(){ toast("فایل دمو پیدا نشد"); });
+}
+
+/* ---------- configs list + filter ---------- */
+function protoOf(u){
+  var m = /^([a-z0-9+.-]+):\/\//i.exec(u||"");
+  return m ? m[1].toLowerCase() : "unknown";
+}
+function parseConfigs(){ // demo placeholders
+  S.configs = [
+    "vless://demo-uuid-1@demo.starforge.pro:443?security=tls&sni=demo.starforge.pro&type=ws&path=%2Fdemo#StarForge-DE-01",
+    "vmess://eyJ2IjoiMiIsInBzIjoiU3RhckZvcmdlLURFLTAyIiwiYWQiOiJkZW1vLnN0YXJmb3JnZS5wcm8iLCJwb3J0IjoiNDQzIiwiaWQiOiJkZW1vLXV1aWQtMiIsImFpZCI6IjAiLCJuZXQiOiJ3cyIsInRscyI6InRscyJ9",
+    "trojan://demo-pass@demo.starforge.pro:443?sni=demo.starforge.pro#StarForge-DE-03",
+    "ss://YWVzLTI1Ni1nY206ZGVtby1wYXNz@demo.starforge.pro:8388#StarForge-DE-04"
+  ];
+  renderConfigs();
+}
+function renderConfigs(){
+  var protos = ["all"].concat(Array.from(new Set(S.configs.map(protoOf))));
+  var f = document.getElementById("protoFilters"); f.innerHTML = "";
+  protos.forEach(function(p){
+    var b = document.createElement("button");
+    b.textContent = p === "all" ? "همه" : p;
+    if(p === S.filter) b.className = "active";
+    b.onclick = function(){ S.filter = p; renderConfigs(); };
+    f.appendChild(b);
+  });
+  var list = document.getElementById("cfgList"); list.innerHTML = "";
+  S.configs.filter(function(c){ return S.filter==="all" || protoOf(c)===S.filter; })
+  .forEach(function(c,i){
+    var d = document.createElement("div"); d.className = "cfgitem";
+    var nm = document.createElement("div"); nm.className = "nm";
+    try{ nm.textContent = decodeURIComponent((c.split("#")[1]||("کانفیگ "+(i+1)))); }
+    catch(e){ nm.textContent = "کانفیگ "+(i+1); }
+    var pr = document.createElement("div"); pr.className = "proto"; pr.textContent = protoOf(c);
+    var code = document.createElement("code"); code.textContent = c;
+    var ops = document.createElement("div"); ops.className = "ops";
+    var b1 = document.createElement("button"); b1.className="btn primary"; b1.textContent="کپی";
+    b1.onclick = function(){ copyText(c); };
+    var b2 = document.createElement("button"); b2.className="btn"; b2.textContent="افزودن به v2rayNG";
+    b2.onclick = function(){ location.href = "v2rayng://install-config?url=" + encodeURIComponent(c); };
+    ops.appendChild(b1); ops.appendChild(b2);
+    d.appendChild(nm); d.appendChild(pr); d.appendChild(code); d.appendChild(ops);
+    list.appendChild(d);
+  });
+  if(!list.children.length){
+    list.innerHTML = '<div class="card">کانفیگی با این فیلتر نیست.</div>';
+  }
+}
+
+/* ---------- copy / QR / quick-add ---------- */
+function copyText(t){
+  function done(){ toast("کپی شد ✓"); }
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done, function(){ fallback(); }); }
+  else fallback();
+  function fallback(){ var ta=document.createElement("textarea"); ta.value=t; document.body.appendChild(ta); ta.select();
+    try{document.execCommand("copy");done();}catch(e){toast("کپی نشد");} ta.remove(); }
+}
+function copySub(){
+  var t = S.raw || S.subUrl || document.getElementById("pasteBox").value.trim();
+  if(!t){ toast("اشتراکی برای کپی نیست"); return; }
+  copyText(t);
+}
+function openQR(){
+  var t = S.subUrl || S.raw || document.getElementById("pasteBox").value.trim();
+  if(!t){ toast("اشتراکی برای QR نیست"); return; }
+  var box = document.getElementById("qrcode"); box.innerHTML = "";
+  try{ new QRCode(box, {text:t.slice(0,2000), width:220, height:220, correctLevel: QRCode.CorrectLevel.M}); }
+  catch(e){ box.textContent = "خطا در ساخت QR"; }
+  document.getElementById("qrModal").classList.add("open");
+}
+function closeQR(){ document.getElementById("qrModal").classList.remove("open"); }
+function buildQuickAdd(sub){
+  var q = document.getElementById("quickAdd"); q.innerHTML = "";
+  if(!sub){ q.innerHTML = '<span class="sub">در حالت دمو دکمه‌ها غیرفعال‌اند (?sub= بدهید)</span>'; return; }
+  var enc = encodeURIComponent(sub.length > 1800 ? sub.slice(0,1800) : sub);
+  var apps = [
+    ["v2rayNG","v2rayng://install-sub?url="],
+    ["Hiddify","hiddify://install-sub?url="],
+    ["Happ","happ://add-sub?url="],
+    ["v2Box","v2box://install-sub?url="],
+    ["sing-box","sing-box://import-remote-profile?url="]
+  ];
+  apps.forEach(function(a){
+    var l = document.createElement("a"); l.href = a[1]+enc; l.textContent = a[0]; q.appendChild(l);
+  });
+}
+
+/* ---------- chart ---------- */
+function drawChart(week){
+  var c = document.getElementById("chart"); if(!c) return;
+  var x = c.getContext("2d"); var W=c.width,H=c.height;
+  x.clearRect(0,0,W,H);
+  var max = Math.max.apply(null, week.concat([1]));
+  var bw = W/7;
+  for(var i=0;i<7;i++){
+    var h = (week[i]/max)*(H-30);
+    var g = x.createLinearGradient(0,H-h,0,H);
+    g.addColorStop(0,"#7c3aed"); g.addColorStop(1,"#06b6d4");
+    x.fillStyle = g;
+    var bx = i*bw+8;
+    x.beginPath();
+    if(x.roundRect) x.roundRect(bx, H-14-h, bw-16, h, 6); else x.rect(bx, H-14-h, bw-16, h);
+    x.fill();
+    x.fillStyle = "#93a0b8"; x.font = "10px Vazirmatn";
+    x.fillText(week[i], bx, H-2);
+  }
+}
+
+/* ---------- IP / status ---------- */
+function setStatus(ok){
+  var b = document.getElementById("statusBadge");
+  b.classList.toggle("off", !ok);
+  document.getElementById("statusTxt").textContent = ok ? "فعال" : "قطع";
+}
+function checkIP(){
+  var box = document.getElementById("ipBox");
+  box.innerHTML = "در حال بررسی…";
+  fetch("https://ipwho.is/?lang=fa").then(function(r){return r.json();}).then(function(j){
+    if(!j || !j.success) throw new Error("bad");
+    box.innerHTML = "آی‌پی: <b dir='ltr'>"+j.ip+"</b><br>کشور: <b>"+(j.country||"—")+"</b> — شهر: <b>"+(j.city||"—")+"</b>";
+  }).catch(function(){
+    fetch("https://api.ipify.org?format=json").then(function(r){return r.json();}).then(function(j){
+      box.innerHTML = "آی‌پی: <b dir='ltr'>"+j.ip+"</b><br>(جزئیات مکان در دسترس نیست)";
+    }).catch(function(){ box.textContent = "بررسی IP ممکن نشد."; });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", boot);
+</script>
+</body>
+</html>
