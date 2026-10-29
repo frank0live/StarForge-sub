@@ -26,6 +26,13 @@ or paste the subscription content manually. No backend, GitHub Pages ready.
 | `scripts/style_audit.py` | چک‌لیست ضد نشت برند (`python3 scripts/style_audit.py`) |
 | `docs/` | جای اسکرین‌شات‌ها (فعلاً placeholder) |
 
+
+## پیشنمایش
+
+| داشبورد | کانفیگها |
+|---|---|
+| ![داشبورد](docs/shot-dashboard.jpg) | ![کانفیگها](docs/shot-configs.jpg) |
+
 ## نکته مهم درباره CORS
 
 سرور اشتراک هدر CORS نمی‌دهد، پس `fetch` مستقیم از مرورگر معمولاً fail می‌شود.
