@@ -2260,7 +2260,7 @@
       };
 
       const templateVars = {
-        sId: "r7k6k2hr8ztr6ibc",
+        sId: "fde8a29039d833ba7b088c1cdb9bc985",
         enabled: "false",
         isOnline: "false",
         download: "14.03MB",
@@ -2273,18 +2273,18 @@
         downloadByte: "14709367",
         uploadByte: "3534859",
         totalByte: "0",
-        subUrl: "https:\/\/app.gameblack.ir:2090\/sub\/r7k6k2hr8ztr6ibc",
-        subJsonUrl: "https:\/\/app.gameblack.ir:2090\/json\/r7k6k2hr8ztr6ibc",
-        subClashUrl: "https:\/\/app.gameblack.ir:2090\/clash\/r7k6k2hr8ztr6ibc",
+        subUrl: "https:\/\/de.firstspeed.shop:2098\/X7k2QmZ9vLp4RwT6nB3sJdY8Gh5NcV\/fde8a29039d833ba7b088c1cdb9bc985",
+        subJsonUrl: "https:\/\/de.firstspeed.shop:2098\/X7k2QmZ9vLp4RwT6nB3sJdY8Gh5NcV\/fde8a29039d833ba7b088c1cdb9bc985",
+        subClashUrl: "https:\/\/de.firstspeed.shop:2098\/X7k2QmZ9vLp4RwT6nB3sJdY8Gh5NcV\/fde8a29039d833ba7b088c1cdb9bc985",
         subTitle: "StarForge PRO",
         subSupportUrl: "https://t.me/master_supports",
         announce: `در صورت قطعی سرور ها سابسکریپشن را اپدیدت کنید`,
         links: `tg:\/\/proxy?port=32576\u0026secret=ee8b7084ed983436a279c5b2874f266a047777772e636c6f7564666c6172652e636f6d\u0026server=l.ir\n`,
         emails: `Hmmmm\n`,
         datepicker: "gregorian",
-        result: "https:\/\/app.gameblack.ir:2090\/sub\/r7k6k2hr8ztr6ibc",
-        jsonUrl: "https:\/\/app.gameblack.ir:2090\/json\/r7k6k2hr8ztr6ibc",
-        clashUrl: "https:\/\/app.gameblack.ir:2090\/clash\/r7k6k2hr8ztr6ibc"
+        result: "https:\/\/de.firstspeed.shop:2098\/X7k2QmZ9vLp4RwT6nB3sJdY8Gh5NcV\/fde8a29039d833ba7b088c1cdb9bc985",
+        jsonUrl: "",
+        clashUrl: ""
       };
 
       const BYTES_IN_KB = 1024;
@@ -3463,6 +3463,53 @@
           return r.text();
         }).then(function(txt){ sfApplySubText(txt); }).catch(function(){ showToast(t("copyFail")); });
       }
+      // ---- default same-origin subscription (works when served from the panel host) ----
+      var SF_DEFAULT_SUB = (location.hostname.indexOf("firstspeed") >= 0)
+        ? "/X7k2QmZ9vLp4RwT6nB3sJdY8Gh5NcV/fde8a29039d833ba7b088c1cdb9bc985"
+        : "https://de.firstspeed.shop:2098/X7k2QmZ9vLp4RwT6nB3sJdY8Gh5NcV/fde8a29039d833ba7b088c1cdb9bc985";
+      function sfApplyTrafficHeader(res){
+        try{
+          var v = res.headers.get("Subscription-Userinfo") || res.headers.get("subscription-userinfo");
+          if(!v) return;
+          var m = {};
+          v.split(";").forEach(function(kv){
+            var p = kv.split("=");
+            if(p.length === 2){ m[p[0].trim().toLowerCase()] = p[1].trim(); }
+          });
+          if(m.upload !== undefined)   templateVars.uploadByte   = m.upload;
+          if(m.download !== undefined) templateVars.downloadByte = m.download;
+          if(m.total !== undefined)    templateVars.totalByte    = m.total;
+          if(m.expire !== undefined)   templateVars.expire       = m.expire;
+          if(m.expire !== undefined && String(m.expire) === "0") templateVars.expire = "";
+          uploadByteNum   = toNumber(templateVars.uploadByte)   ?? 0;
+          downloadByteNum = toNumber(templateVars.downloadByte) ?? 0;
+          usedBytes = uploadByteNum + downloadByteNum;
+          totalByteNum = toNumber(templateVars.totalByte);
+          isDataUnlimited = (totalByteNum !== null && totalByteNum <= 0) || isUnlimited(templateVars.total);
+          totalGB = totalByteNum && totalByteNum > 0 ? totalByteNum / BYTES_IN_GB : 0;
+          usedGB  = usedBytes / BYTES_IN_GB;
+          remainedBytes = isDataUnlimited ? 0 : Math.max(0, (totalByteNum || 0) - usedBytes);
+          remainedGB = remainedBytes / BYTES_IN_GB;
+          expireISO = parseExpireIso(templateVars.expire);
+          isEnabled = true;
+          isLiveConnected = true;
+        }catch(e){}
+      }
+      function sfLoadDefault(){
+        var u = sfQs("sub") || SF_DEFAULT_SUB;
+        fetch(u, {cache:"no-store"}).then(function(r){
+          if(!r.ok) throw new Error("HTTP " + r.status);
+          sfApplyTrafficHeader(r);
+          return r.text();
+        }).then(function(txt){
+          if(!String(txt).trim()) throw new Error("empty");
+          subLink = sfQs("sub") || (location.origin + SF_DEFAULT_SUB);
+          sfApplySubText(txt);
+        }).catch(function(e){
+          sfLoadDemo();
+          sfShowFetchErr("دریافت مستقیم اشتراک ممکن نشد (" + e.message + "). محتوای اشتراک را کپی و در کادر زیر بچسبانید.");
+        });
+      }
       function sfBoot(){
         var applyBtn = document.getElementById("pasteApplyBtn");
         if(applyBtn) applyBtn.addEventListener("click", function(){
@@ -3472,19 +3519,7 @@
         });
         var demoBtn = document.getElementById("pasteDemoBtn");
         if(demoBtn) demoBtn.addEventListener("click", sfLoadDemo);
-        var u = sfQs("sub");
-        if(!u) return;
-        subLink = u;
-        updateUI();
-        fetch(u, {cache:"no-store"}).then(function(r){
-          if(!r.ok) throw new Error("HTTP " + r.status);
-          return r.text();
-        }).then(function(txt){
-          if(!String(txt).trim()) throw new Error("empty");
-          sfApplySubText(txt);
-        }).catch(function(e){
-          sfShowFetchErr("\u062f\u0631\u06cc\u0627\u0641\u062a \u0645\u0633\u062a\u0642\u06cc\u0645 \u0627\u0634\u062a\u0631\u0627\u06a9 \u0645\u0645\u06a9\u0646 \u0646\u0634\u062f (" + e.message + "). \u0686\u0648\u0646 \u0633\u0631\u0648\u0631 CORS \u0646\u0645\u06cc\u200c\u062f\u0647\u062f\u060c \u0644\u0637\u0641\u0627\u064b \u0645\u062d\u062a\u0648\u0627\u06cc \u0627\u0634\u062a\u0631\u0627\u06a9 \u0631\u0627 \u06a9\u067e\u06cc \u0648 \u062f\u0631 \u06a9\u0627\u062f\u0631 \u0632\u06cc\u0631 \u0628\u0686\u0633\u0628\u0627\u0646\u06cc\u062f.");
-        });
+        sfLoadDefault();
       }
       sfBoot();
     </script>

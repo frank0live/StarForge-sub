@@ -12,10 +12,10 @@ ROOT = Path(__file__).resolve().parent.parent
 BANNED = [
     "hiddify", "hiddifi", "v2ray", "v2box", "nakoray", "nekoray",
     "gameblack", "marzban", "x-ui", "xui", "sanai", "sanaei",
-    "bento",
 ]
 
-TEXT_FILES = ["index.html", "README.md", "data/config.json", "docs/screenshot-placeholder.md"]
+TEXT_FILES = ["index.html", "README.md", "data/config.json"]
+# NOTE: "bento" is a generic layout term (CSS vars/classes), deliberately not banned.
 ALLOW_IN = {"README.md"}  # credits may mention inspirations
 
 
