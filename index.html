@@ -1753,8 +1753,9 @@
       }
     
       /* StarForge PRO additions: paste fallback + fetch error + local QR + sing-box pill */
-      .paste-area{width:100%;min-height:110px;resize:vertical;font-family:inherit;font-size:.78rem;color:var(--text-main);background:rgba(2,6,16,.55);border:1px solid var(--border-glass);border-radius:var(--radius-sm);padding:.7rem .8rem;direction:ltr;text-align:left}
-      .paste-area::placeholder{color:var(--text-sub)}
+      .direct-link-row{display:flex;flex-direction:column;gap:.7rem;margin-top:.55rem}
+      .direct-link-value{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.72rem;color:var(--text-sub);background:rgba(2,6,16,.55);border:1px solid var(--border-glass);border-radius:var(--radius-sm);padding:.65rem .8rem}
+      @media (min-width:600px){.direct-link-row{flex-direction:row;align-items:center}.direct-link-value{flex:1}.direct-link-row .btn-cta-main{width:auto;flex:0 0 auto}}
       .err{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.4);color:#fecdd3;border-radius:var(--radius-sm);padding:.6rem .8rem;font-size:.8rem;margin-bottom:.6rem;line-height:1.9}
       #qrLocalBox{justify-content:center;background:#fff;border-radius:14px;padding:10px;margin:0 auto}
       #qrLocalBox img,#qrLocalBox canvas{display:block}
@@ -2056,21 +2057,17 @@
 
         </div>
 
-      <!-- StarForge PRO: paste fallback (?sub= / CORS graceful error) -->
-      <div class="bento-card bento-col-2" id="pasteCard" style="margin-top:1rem;">
+      <!-- StarForge PRO: the direct link of this section, one copy button only -->
+      <div class="bento-card bento-col-2" id="linkCard" style="margin-top:1rem;">
         <div class="tile-header">
-          <span class="tile-title"><i class="fa-solid fa-paste" style="color: var(--accent-cyan);"></i> <span id="lblPasteTitle">لینک اشتراک وصل نشد؟ محتوای اشتراک را اینجا بچسبانید</span></span>
+          <span class="tile-title"><i class="fa-solid fa-link" style="color: var(--accent-cyan);"></i> <span id="lblDirectLinkTitle">لینک مستقیم این بخش</span></span>
         </div>
         <div class="err" id="fetchErr" style="display:none;"></div>
-        <textarea id="pasteBox" class="paste-area" placeholder="vmess://...  |  vless://...  |  trojan://...  |  ss://...  |  tg://..."></textarea>
-        <div class="quick-actions-bar">
-          <button class="btn-cta-main" id="pasteApplyBtn">
-            <i class="fa-solid fa-check"></i>
-            <span id="lblPasteApply">تحلیل متن چسبانده‌شده</span>
-          </button>
-          <button class="btn-cta-sub" id="pasteDemoBtn">
-            <i class="fa-solid fa-flask"></i>
-            <span id="lblPasteDemo">بارگذاری دموی نمایشی</span>
+        <div class="direct-link-row">
+          <code class="direct-link-value" id="directLinkValue" dir="ltr">—</code>
+          <button class="btn-cta-main" id="btnCopyDirectLink">
+            <i class="fa-regular fa-copy"></i>
+            <span id="lblCopyDirectLink">کپی لینک مستقیم</span>
           </button>
         </div>
       </div>
@@ -2366,6 +2363,7 @@
           remainSub: "باقی‌مانده اشتراک شما", usedSub: "مصرف‌شده از کل ترافیک",
           total: "کل", download: "دانلود", upload: "آپلود",
           copySub: "کپی لینک اشتراک", qrSub: "QR کد",
+          directLinkTitle: "لینک مستقیم این بخش", copyDirectLink: "کپی لینک مستقیم",
           timeRemaining: "زمان باقی‌مانده", days: "روز", hours: "ساعت", mins: "دقیقه", secs: "ثانیه",
           quickApps: "افزودن سریع", clickConnect: "یک کلیک برای نصب خودکار در نرم‌افزار",
           chartTitle: "مصرف ۷ روز اخیر", chartTotal: "مجموع:", chartFrom: "از ", chartTo: "تا امروز", chartToday: "امروز", chartShare: "سهم:",
@@ -2391,6 +2389,7 @@
           remainSub: "Remaining on your plan", usedSub: "Total consumed data",
           total: "Total", download: "Download", upload: "Upload",
           copySub: "Copy Subscription", qrSub: "QR Code",
+          directLinkTitle: "Direct Link", copyDirectLink: "Copy Direct Link",
           timeRemaining: "Time Remaining", days: "Days", hours: "Hours", mins: "Mins", secs: "Secs",
           quickApps: "Quick Import", clickConnect: "One-click to connect to apps",
           chartTitle: "7-Day Usage", chartTotal: "Total:", chartFrom: "From ", chartTo: "To Today", chartToday: "Today", chartShare: "Share:",
@@ -2416,6 +2415,7 @@
           remainSub: "您的套餐剩余流量", usedSub: "当前已使用流量",
           total: "总计", download: "下行", upload: "上行",
           copySub: "复制订阅链接", qrSub: "二维码",
+          directLinkTitle: "本节点直连链接", copyDirectLink: "复制直连链接",
           timeRemaining: "剩余有效期", days: "天", hours: "小时", mins: "分", secs: "秒",
           quickApps: "快速导入", clickConnect: "一键配置客户端应用",
           chartTitle: "最近7天用量", chartTotal: "总计:", chartFrom: "从 ", chartTo: "至今天", chartToday: "今天", chartShare: "占比:",
@@ -2441,6 +2441,7 @@
           remainSub: "Доступно по тарифу", usedSub: "Потреблено данных",
           total: "Всего", download: "Загрузка", upload: "Отдача",
           copySub: "Скопировать ссылку", qrSub: "QR-код",
+          directLinkTitle: "Прямая ссылка", copyDirectLink: "Скопировать ссылку",
           timeRemaining: "Срок действия", days: "дн.", hours: "ч.", mins: "мин.", secs: "сек.",
           quickApps: "Быстрый импорт", clickConnect: "В один клик для подключения",
           chartTitle: "Трафик за 7 дней", chartTotal: "Всего:", chartFrom: "С ", chartTo: "По сегодня", chartToday: "Сегодня", chartShare: "Доля:",
@@ -2629,22 +2630,43 @@
         setTimeout(() => el.classList.remove("show"), 2200);
       }
 
+      function sfLegacyCopy(txt) {
+        try {
+          var ta = document.createElement("textarea");
+          ta.value = txt;
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.top = "-1000px";
+          document.body.appendChild(ta);
+          ta.select();
+          ta.setSelectionRange(0, ta.value.length);
+          var ok = document.execCommand("copy");
+          document.body.removeChild(ta);
+          return ok;
+        } catch(e) { return false; }
+      }
+
       async function copyText(txt, btnElement = null) {
         if (!txt) return showToast(t("copyFail"));
-        try {
-          await navigator.clipboard.writeText(txt);
+        var done = false;
+        if (navigator.clipboard && window.isSecureContext) {
+          try { await navigator.clipboard.writeText(txt); done = true; } catch(e) { done = sfLegacyCopy(txt); }
+        } else {
+          done = sfLegacyCopy(txt);
+        }
+        if (done) {
           showToast(t("copyDone"));
           if (btnElement) {
             btnElement.classList.add("copied");
-            let icon = btnElement.querySelector("i");
-            let origClass = icon ? icon.className : "";
-            if (icon) icon.className = "fa-solid fa-check";
-            setTimeout(() => {
+            var ic = btnElement.querySelector("i");
+            var oc = ic ? ic.className : "";
+            if (ic) ic.className = "fa-solid fa-check";
+            setTimeout(function(){
               btnElement.classList.remove("copied");
-              if (icon) icon.className = origClass;
+              if (ic) ic.className = oc;
             }, 1800);
           }
-        } catch(e) {
+        } else {
           showToast(t("copyFail"));
         }
       }
@@ -3178,6 +3200,10 @@
         document.getElementById("lblUpText").innerText = t("upload") + ":";
         document.getElementById("btnCopySubText").innerText = t("copySub");
         document.getElementById("btnQrSubText").innerText = t("qrSub");
+        var dlTitle = document.getElementById("lblDirectLinkTitle");
+        if(dlTitle) dlTitle.innerText = t("directLinkTitle");
+        var dlBtn = document.getElementById("lblCopyDirectLink");
+        if(dlBtn) dlBtn.innerText = t("copyDirectLink");
         document.getElementById("lblTimeRemaining").innerText = t("timeRemaining");
         document.getElementById("lblDays").innerText = t("days");
         document.getElementById("lblHours").innerText = t("hours");
@@ -3447,8 +3473,6 @@
       }
       function sfApplySubText(raw){
         var decoded = sfDecodeSubText(raw);
-        var pb = document.getElementById("pasteBox");
-        if(pb) pb.value = decoded.slice(0, 4000);
         var cfgs = decoded.split(/\r?\n/).map(function(x){ return x.trim(); }).filter(function(x){
           return /^(vmess|vless|trojan|ss|tuic|hysteria2?|wireguard|ssh|tg):\/\//i.test(x);
         });
@@ -3457,11 +3481,12 @@
         if(!subLink) subLink = sfQs("sub") || cfgs[0];
         updateUI();
       }
-      function sfLoadDemo(){
-        fetch("assets/demo-sub.txt", {cache:"no-store"}).then(function(r){
-          if(!r.ok) throw new Error("HTTP " + r.status);
-          return r.text();
-        }).then(function(txt){ sfApplySubText(txt); }).catch(function(){ showToast(t("copyFail")); });
+      // the direct link of THIS section (same URL the page was opened with)
+      function sfDirectLink(){
+        if(location.hostname.indexOf("firstspeed") >= 0){
+          return location.origin + location.pathname.replace(/\/+$/, "");
+        }
+        return SF_DEFAULT_SUB;
       }
       // ---- default same-origin subscription (works when served from the panel host) ----
       var SF_DEFAULT_SUB = (location.hostname.indexOf("firstspeed") >= 0)
@@ -3511,22 +3536,17 @@
           return r.text();
         }).then(function(txt){
           if(!String(txt).trim()) throw new Error("empty");
-          subLink = sfQs("sub") || (location.origin + (sfOwnPath() || SF_DEFAULT_SUB));
+          subLink = sfQs("sub") || sfDirectLink();
           sfApplySubText(txt);
         }).catch(function(e){
-          sfLoadDemo();
-          sfShowFetchErr("دریافت مستقیم اشتراک ممکن نشد (" + e.message + "). محتوای اشتراک را کپی و در کادر زیر بچسبانید.");
+          sfShowFetchErr("دریافت اشتراک ممکن نشد (" + e.message + ")؛ لطفاً صفحه را دوباره باز کنید یا با پشتیبانی در تماس باشید.");
         });
       }
       function sfBoot(){
-        var applyBtn = document.getElementById("pasteApplyBtn");
-        if(applyBtn) applyBtn.addEventListener("click", function(){
-          var v = document.getElementById("pasteBox").value.trim();
-          if(!v) return showToast(t("copyFail"));
-          sfApplySubText(v);
-        });
-        var demoBtn = document.getElementById("pasteDemoBtn");
-        if(demoBtn) demoBtn.addEventListener("click", sfLoadDemo);
+        var linkEl = document.getElementById("directLinkValue");
+        if(linkEl) linkEl.textContent = sfDirectLink();
+        var copyBtn = document.getElementById("btnCopyDirectLink");
+        if(copyBtn) copyBtn.addEventListener("click", function(){ copyText(sfDirectLink(), copyBtn); });
         sfLoadDefault();
       }
       sfBoot();
