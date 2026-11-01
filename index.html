@@ -3467,6 +3467,14 @@
       var SF_DEFAULT_SUB = (location.hostname.indexOf("firstspeed") >= 0)
         ? "/X7k2QmZ9vLp4RwT6nB3sJdY8Gh5NcV/fde8a29039d833ba7b088c1cdb9bc985"
         : "https://de.firstspeed.shop:2098/X7k2QmZ9vLp4RwT6nB3sJdY8Gh5NcV/fde8a29039d833ba7b088c1cdb9bc985";
+      // Each client opens THEIR OWN link: /<subBasePath>/<their-token>
+      // Use the token from the URL so everyone sees only their own configs.
+      function sfOwnPath(){
+        var p = location.pathname.replace(/\/+$/, "");
+        var seg = p.split("/").filter(Boolean).pop() || "";
+        if(seg.indexOf(".") >= 0) return "";                 // index.html etc.
+        return /^[A-Za-z0-9]{12,64}$/.test(seg) ? p : "";     // panel token shape
+      }
       function sfApplyTrafficHeader(res){
         try{
           var v = res.headers.get("Subscription-Userinfo") || res.headers.get("subscription-userinfo");
@@ -3496,14 +3504,14 @@
         }catch(e){}
       }
       function sfLoadDefault(){
-        var u = sfQs("sub") || SF_DEFAULT_SUB;
+        var u = sfQs("sub") || sfOwnPath() || SF_DEFAULT_SUB;
         fetch(u, {cache:"no-store"}).then(function(r){
           if(!r.ok) throw new Error("HTTP " + r.status);
           sfApplyTrafficHeader(r);
           return r.text();
         }).then(function(txt){
           if(!String(txt).trim()) throw new Error("empty");
-          subLink = sfQs("sub") || (location.origin + SF_DEFAULT_SUB);
+          subLink = sfQs("sub") || (location.origin + (sfOwnPath() || SF_DEFAULT_SUB));
           sfApplySubText(txt);
         }).catch(function(e){
           sfLoadDemo();
